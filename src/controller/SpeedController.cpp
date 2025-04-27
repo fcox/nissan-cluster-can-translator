@@ -10,12 +10,13 @@ SpeedController::SpeedController(float min, float max, float step)
 {
 }
 
-void SpeedController::startSweep(unsigned long riseTime, unsigned long fallTime, unsigned long pause) {
+void SpeedController::startSweep(unsigned long riseTime = 1000, unsigned long fallTime = 1000, unsigned long pause = 500) {
     sweepUpTime = riseTime;
     sweepDownTime = fallTime;
     pauseDuration = pause;
     currentSpeed = minSpeed;
     state = SweepState::Rising;
+    vehicleState.speed = currentSpeed;
 
     const float totalSteps = (maxSpeed - minSpeed) / stepSize;
     currentInterval = riseTime / totalSteps;
@@ -23,7 +24,6 @@ void SpeedController::startSweep(unsigned long riseTime, unsigned long fallTime,
 }
 
 void SpeedController::update() {
-    vehicleState.speed = currentSpeed;
 
     if(!singleShot) return;
 
@@ -82,7 +82,7 @@ SweepState SpeedController::getState() const {
 }
 
 uint16_t SpeedController::getCANValue() const {
-    return static_cast<uint16_t>(currentSpeed * 100);
+    return static_cast<uint16_t>(currentSpeed );
 }
 
 bool SpeedController::isRunning() const
@@ -91,6 +91,6 @@ bool SpeedController::isRunning() const
 }
 
 void SpeedController::startSingleSweep() {
-    startSweep(sweepUpTime, sweepDownTime, pauseDuration);
+    startSweep();
     singleShot = true;
 }

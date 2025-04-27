@@ -1,8 +1,8 @@
 ﻿#include "sender/SpeedSender.h"
 #include "uitls/GlobalData.h"
 
-SpeedSender::SpeedSender(MCP_CAN& canRef, float& speedRef)
-    : CANSender(canRef, 40), currentSpeed(speedRef) {}
+SpeedSender::SpeedSender(MCP_CAN& canRef)
+    : CANSender(canRef, 20) {}
 
 void SpeedSender::send(unsigned long id, byte* data, unsigned int length) {
 
@@ -18,7 +18,7 @@ void SpeedSender::send()
 void SpeedSender::setSpeed(const float speed)
 {
 
-    const uint16_t canValue = static_cast<uint16_t>(speed * 100 );
+    const uint16_t canValue = static_cast<uint16_t>(speed * 100);
     unsigned int dataLength = 8;
     byte speedData[dataLength] = {
         highByte(canValue), lowByte(canValue),

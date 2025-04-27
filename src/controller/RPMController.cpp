@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <stdint.h>
 
+#include "uitls/GlobalData.h"
+
 RPMController::RPMController(float min, float max, float step)
     : minSpeed(min), maxSpeed(max), stepSize(step), currentSpeed(min), sweepUpTime(0), sweepDownTime(0),
       pauseDuration(0),
@@ -9,12 +11,13 @@ RPMController::RPMController(float min, float max, float step)
 {
 }
 
-void RPMController::startSweep(unsigned long riseTime, unsigned long fallTime, unsigned long pause) {
+void RPMController::startSweep(unsigned long riseTime = 1000, unsigned long fallTime = 1000, unsigned long pause = 500) {
     sweepUpTime = riseTime;
     sweepDownTime = fallTime;
     pauseDuration = pause;
     currentSpeed = minSpeed;
     state = SweepState::Rising;
+    vehicleState.rpm = currentSpeed;
 
     const float totalSteps = (maxSpeed - minSpeed) / stepSize;
     currentInterval = riseTime / totalSteps;
@@ -79,7 +82,7 @@ SweepState RPMController::getState() const {
 }
 
 uint16_t RPMController::getCANValue() const {
-    return static_cast<uint16_t>(currentSpeed * 100);
+    return static_cast<uint16_t>(currentSpeed);
 }
 
 bool RPMController::isRunning() const
@@ -88,6 +91,6 @@ bool RPMController::isRunning() const
 }
 
 void RPMController::startSingleSweep() {
-    startSweep(sweepUpTime, sweepDownTime, pauseDuration);
+    startSweep();
     singleShot = true;
 }

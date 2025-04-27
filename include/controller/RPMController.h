@@ -5,7 +5,7 @@
 
 class RPMController {
 public:
-    RPMController(float min = 0.0, float max = 8000.0, float step = 10.0);
+    RPMController(float min = 0, float max = 0, float step = 1);
 
     void startSweep(unsigned long riseTime, unsigned long fallTime, unsigned long pause);
     void update();

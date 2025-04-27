@@ -4,11 +4,11 @@ CANSender::CANSender(MCP_CAN& canRef, unsigned long intervalMs)
     : can(canRef), interval(intervalMs) {}
 
 void CANSender::update() {
+
     if(!autoSend)
         return;
 
     unsigned long now = millis();
-
     if(now - lastSent >= interval) {
         send();
         lastSent = now;
@@ -16,7 +16,6 @@ void CANSender::update() {
     }
 }
 
-void CANSender::setAutoMode(bool enable)
-{
+void CANSender::setAutoMode(bool enable){
     autoSend = enable;
 }
